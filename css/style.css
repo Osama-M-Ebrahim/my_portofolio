@@ -949,6 +949,7 @@ section:nth-child(odd) .animate.scroll,
 
 .about.show-animate .animate.scroll,
 .education.show-animate .animate.scroll,
+.projects.show-animate .animate.scroll,
 .skills.show-animate .animate.scroll,
 .contact.show-animate .animate.scroll,
 .footer.show-animate .animate.scroll {
@@ -1270,3 +1271,16 @@ section:nth-child(odd) .animate.scroll,
 .project-media { overflow: hidden; border-radius: 1rem; }
 .project-main-image { transition: transform 0.5s ease; }
 .project-card:hover .project-main-image { transform: scale(1.05); }
+
+.projects-header .btn-inline {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.9rem 2rem;
+  font-size: 1.5rem;
+  font-weight: 500;
+  background: var(--main-bg-color);
+  color: var(--bg-color);
+  border: 0.2rem solid var(--main-bg-color);
+  border-radius: 0.8rem;
+}
