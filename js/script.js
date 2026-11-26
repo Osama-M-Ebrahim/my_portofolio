@@ -26,7 +26,7 @@ const revealObserver = new IntersectionObserver(
       }
     });
   },
-  { threshold: 0.15 },
+  { threshold: 0, rootMargin: "0px 0px -8% 0px" },
 );
 sections.forEach((sec) => revealObserver.observe(sec));
 if (footer) revealObserver.observe(footer);

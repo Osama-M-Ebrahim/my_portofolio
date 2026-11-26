@@ -1284,3 +1284,21 @@ section:nth-child(odd) .animate.scroll,
   border: 0.2rem solid var(--main-bg-color);
   border-radius: 0.8rem;
 }
+
+/* Projects heading and button must never depend on the reveal overlay */
+.projects .animate.scroll { display: none !important; }
+.projects .heading { color: var(--text-color, #ededed); }
+.projects .projects-header .btn.btn-inline {
+  display: inline-flex !important;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+  min-height: 4.6rem;
+  padding: 0.9rem 2.4rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  background: var(--main-bg-color) !important;
+  color: var(--bg-color) !important;
+  border: 0.2rem solid var(--main-bg-color);
+  border-radius: 0.8rem;
+}
