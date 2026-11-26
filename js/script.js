@@ -12,51 +12,64 @@ menuIcon.onclick = () => {
 let sections = document.querySelectorAll("section");
 let navLinks = document.querySelectorAll("header nav a");
 
-window.onscroll = () => {
-  sections.forEach((sec) => {
-    let top = window.scrollY;
-    let offset = sec.offsetTop - 100;
-    let height = sec.offsetHeight;
-    let id = sec.getAttribute("id");
+const header = document.querySelector("header");
+const footer = document.querySelector("footer");
+const progressBar = document.querySelector("#scroll-progress");
 
-    if (top >= offset && top < offset + height) {
-      // active navdar links
-      navLinks.forEach((links) => {
-        links.classList.remove("active");
-        document
-          .querySelector("header nav a[href*=" + id + "]")
-          .classList.add("active");
-      });
-      // active sections for animation on scroll
-      sec.classList.add("show-animate");
-    } else {
-      sec.classList.remove("show-animate");
-    }
-  });
-  // sticky header
-  let header = document.querySelector("header");
+// reveal each section once, when it enters the viewport
+const revealObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("show-animate");
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  },
+  { threshold: 0.15 },
+);
+sections.forEach((sec) => revealObserver.observe(sec));
+if (footer) revealObserver.observe(footer);
 
-  header.classList.toggle("sticky", window.scrollY > 100);
+// active nav link
+const navObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      const id = entry.target.getAttribute("id");
+      navLinks.forEach((l) => l.classList.toggle("active", l.getAttribute("href") === "#" + id));
+    });
+  },
+  { rootMargin: "-40% 0px -55% 0px" },
+);
+sections.forEach((sec) => navObserver.observe(sec));
 
-  // remove hoggle icon
-  menuIcon.classList.remove("bx-x");
-  navbar.classList.remove("active");
+// sticky header + close mobile menu (passive, one rAF per frame)
+let ticking = false;
+window.addEventListener(
+  "scroll",
+  () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      header.classList.toggle("sticky", window.scrollY > 100);
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      progressBar.style.transform = "scaleX(" + (max > 0 ? window.scrollY / max : 0) + ")";
+      menuIcon.classList.remove("bx-x");
+      navbar.classList.remove("active");
+      ticking = false;
+    });
+  },
+  { passive: true },
+);
 
-  // animation footer on scroll
-  let footer = document.querySelector("footer");
-
-  footer.classList.toggle(
-    "show-animate",
-    this.innerHeight + this.scrollY >= document.scrollingElement.scrollHeight,
-  );
-};
 const projectsGrid = document.querySelector("#projects-grid");
 
 const featuredProjects = [
   {
     name: "Home Service",
     description:
-      "Private home-services app focused on service booking flows, customer experience, and practical mobile product design. No public GitHub repository was available for this project.",
+      "Home-services app (Sanei fi Baytak) for booking home maintenance services, covering the customer booking flow and service screens. Private project.",
     repoUrl: null,
     language: "Private Project",
     tech: ["Flutter", "Dart", "UI/UX", "Service Flow"],
@@ -68,9 +81,9 @@ const featuredProjects = [
     ],
   },
   {
-    name: "E-Commerce",
+    name: "Fresco (E-Commerce)",
     description:
-      "Flutter e-commerce application with responsive shopping experience, REST API integration, Cubit state management, cart flow, and checkout design based on the public Ecommerce_App repository.",
+      "Flutter e-commerce app with product browsing, cart and checkout. Built with Cubit state management and REST API integration.",
     repoUrl: "https://github.com/Osama-M-Ebrahim/Ecommerce_App",
     language: "Flutter",
     tech: ["Flutter", "Dart", "BLoC", "REST API"],
@@ -84,10 +97,10 @@ const featuredProjects = [
   {
     name: "Islami App",
     description:
-      "Islamic mobile app project focused on clean reading experience, content presentation, and user-friendly mobile interactions, based on the public Islami_APP repository.",
-    repoUrl: "https://github.com/Osama-M-Ebrahim/Islami_APP",
+      "Islamic mobile app with Quran, Hadith and Tasbeeh, plus a recitation checker that uses speech-to-text to catch reading mistakes. Team project.",
+    repoUrl: "https://github.com/AhmedMohamedHabashi/Islami",
     language: "Flutter",
-    tech: ["Flutter", "Dart", "UI", "Mobile App"],
+    tech: ["Flutter", "Dart", "Speech-to-Text", "Quran"],
     private: false,
     images: [
       "assets/aslami_image/Screenshot 2026-08-08 030614.png",
@@ -111,7 +124,7 @@ const buildProjectCard = (project) => {
     .slice(1, 3)
     .map(
       (src, index) =>
-        `<img src="${src}" alt="${project.name} screenshot ${index + 2}" class="project-thumb" />`,
+        `<img src="${src}" alt="${project.name} screenshot ${index + 2}" class="project-thumb" loading="lazy" decoding="async" />`,
     )
     .join("");
 
@@ -122,7 +135,7 @@ const buildProjectCard = (project) => {
         <span class="project-language">${project.language}</span>
       </div>
       <div class="project-media">
-        <img src="${mainImage}" alt="${project.name} main screenshot" class="project-main-image" />
+        <img src="${mainImage}" alt="${project.name} main screenshot" class="project-main-image" loading="lazy" decoding="async" />
         <div class="project-thumbs">${thumbs}</div>
       </div>
       <h3>${project.name}</h3>

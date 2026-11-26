@@ -127,7 +127,7 @@ section + section {
 
 .home.show-animate .home-content .text-animate h3 {
   animation: homeBgText 6s linear infinite;
-  animation-delay: 2s;
+  animation-delay: 0.5s;
 }
 
 .home-content .text-animate h3::before {
@@ -143,7 +143,7 @@ section + section {
 
 .home.show-animate .home-content .text-animate h3::before {
   animation: homeCursorText 6s linear infinite;
-  animation-delay: 2s;
+  animation-delay: 0.5s;
 }
 
 .home-content p {
@@ -271,7 +271,7 @@ section + section {
   width: 45%;
   height: 100%;
   background: transparent;
-  transition: 3s;
+  transition: 0.6s;
   z-index: 1;
 }
 
@@ -376,7 +376,7 @@ span {
 .education .education-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 5rem;
+  gap: 3rem;
 }
 
 .education-row .education-column {
@@ -470,7 +470,7 @@ span {
 .skills .skills-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 5rem;
+  gap: 3rem;
 }
 
 .skills-row .skills-column {
@@ -928,13 +928,13 @@ span {
 .navbar .animate,
 #menu-icon .animate,
 .home.show-animate .animate {
-  animation: showRight 1s ease forwards;
-  animation-delay: calc(0.3s * var(--i));
+  animation: showRight 0.45s ease forwards;
+  animation-delay: calc(0.06s * var(--i));
 }
 
 .animate.scroll {
-  transition: 1s ease;
-  transition-delay: calc(0.3s / var(--i));
+  transition: 0.45s ease;
+  transition-delay: calc(0.04s / var(--i));
   animation: none;
 }
 
@@ -952,7 +952,7 @@ section:nth-child(odd) .animate.scroll,
 .skills.show-animate .animate.scroll,
 .contact.show-animate .animate.scroll,
 .footer.show-animate .animate.scroll {
-  transition-delay: calc(0.3s * var(--i));
+  transition-delay: calc(0.06s * var(--i));
   width: 0;
 }
 
@@ -1162,3 +1162,111 @@ section:nth-child(odd) .animate.scroll,
     width: 0;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+  }
+}
+
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+.skill-tags .project-tag {
+  font-size: 1.6rem;
+  padding: 0.7rem 1.6rem;
+}
+
+/* readable repo buttons (previously default dark-blue link on dark background) */
+.project-card .btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--main-bg-color);
+  color: var(--bg-color);
+  border: 0.2rem solid var(--main-bg-color);
+  border-radius: 0.8rem;
+  font-weight: 500;
+}
+
+.contact-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.2rem;
+  max-width: 70rem;
+  margin: 0 auto 3rem;
+}
+.contact-links .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1rem 2rem;
+  font-size: 1.6rem;
+  font-weight: 500;
+  background: transparent;
+  color: var(--main-bg-color);
+  border: 0.2rem solid var(--main-bg-color);
+  border-radius: 0.8rem;
+  transition: 0.3s;
+}
+.contact-links .btn:hover {
+  background: var(--main-bg-color);
+  color: var(--bg-color);
+}
+
+.contact form .btn-box.btns .btn {
+  width: auto;
+  min-width: 18rem;
+  padding: 0 2.4rem;
+  white-space: nowrap;
+}
+
+.contact form .btn-box.btns {
+  justify-content: center;
+}
+
+/* --- optional lightweight animations (transform/opacity only) --- */
+
+/* 1. scroll progress bar */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0.3rem;
+  background: var(--main-bg-color);
+  transform: scaleX(0);
+  transform-origin: left;
+  z-index: 200;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* 2. skill chips fade up one after another when the Skills section appears */
+.skills .skill-tags .project-tag {
+  opacity: 0;
+  transform: translateY(1rem);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.skills.show-animate .skill-tags .project-tag {
+  opacity: 1;
+  transform: none;
+}
+.skill-tags .project-tag:nth-child(1) { transition-delay: 0.1s; }
+.skill-tags .project-tag:nth-child(2) { transition-delay: 0.16s; }
+.skill-tags .project-tag:nth-child(3) { transition-delay: 0.22s; }
+.skill-tags .project-tag:nth-child(4) { transition-delay: 0.28s; }
+.skill-tags .project-tag:nth-child(5) { transition-delay: 0.34s; }
+.skill-tags .project-tag:nth-child(n + 6) { transition-delay: 0.4s; }
+
+/* 3. project screenshot zooms slightly on card hover */
+.project-media { overflow: hidden; border-radius: 1rem; }
+.project-main-image { transition: transform 0.5s ease; }
+.project-card:hover .project-main-image { transform: scale(1.05); }
